@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { Container } from "../../components/Container";
 import { Footer } from "../../components/Footer";
@@ -8,6 +8,7 @@ import { CarInfo, Content, PageHeader } from "./styles";
 
 import { FiChevronLeft } from "react-icons/fi";
 import { useCarsContext } from "../../providers/CarProvider";
+import Swal from "sweetalert2";
 
 interface DetailsParams {
   id: string;
@@ -16,17 +17,36 @@ interface DetailsParams {
 export const Details: React.FC = () => {
   const { id } = useParams<DetailsParams>();
 
-  const { find } = useCarsContext();
+  const { find, remove } = useCarsContext();
   const { goBack } = useHistory();
 
-  const existsCar = find(id);
+  const car = find(id);
 
-  if (!existsCar) {
+  if (!car) {
     // redirecionar para página de not found
     goBack();
   }
 
-  const car = existsCar!;
+  const deleteCar = useCallback(async () => {
+    const response = await Swal.fire({
+      title: "Você tem certeza?",
+      text: "Isso removerá o carro permanentemente!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim, deletar!",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (car) {
+      if (response.isConfirmed) {
+        remove(car?.id);
+
+        goBack();
+      }
+    }
+  }, [car, remove, goBack]);
 
   return (
     <Container>
@@ -40,26 +60,30 @@ export const Details: React.FC = () => {
           <h3>Detalhes do carro</h3>
         </PageHeader>
 
-        <CarInfo>
-          <img src={car.imageUrl} alt={car.model} />
-          <div className="details">
-            <span>
-              Marca <strong>{car.brand}</strong>
-            </span>
-            <span>
-              Modelo <strong>{car.model}</strong>
-            </span>
-            <span>
-              Ano <strong>{car.year}</strong>
-            </span>
-            <div className="actions">
-              <Link to={`/edit/${car.id}`} className="edit">
-                Editar
-              </Link>
-              <button className="delete">Excluir</button>
+        {car && (
+          <CarInfo>
+            <img src={car.imageUrl} alt={car.model} />
+            <div className="details">
+              <span>
+                Marca <strong>{car.brand}</strong>
+              </span>
+              <span>
+                Modelo <strong>{car.model}</strong>
+              </span>
+              <span>
+                Ano <strong>{car.year}</strong>
+              </span>
+              <div className="actions">
+                <Link to={`/edit/${car.id}`} className="edit">
+                  Editar
+                </Link>
+                <button onClick={deleteCar} className="delete">
+                  Excluir
+                </button>
+              </div>
             </div>
-          </div>
-        </CarInfo>
+          </CarInfo>
+        )}
       </Content>
 
       <Footer />
