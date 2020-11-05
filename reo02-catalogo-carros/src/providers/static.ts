@@ -1,84 +1,74 @@
 import { Car } from "./CarProvider";
-
+import { v4 as uuid } from "uuid";
 export const STATIC_CARS: Car[] = [
   {
-    id: "asdf",
+    id: uuid(),
     brand: "Toyota",
     model: "Corolla",
     year: 2020,
-    imageUrl:
-      "https://cdn-motorshow-ssl.akamaized.net/wp-content/uploads/sites/2/2018/04/corolla_gli_2019.jpg",
+    imageUrl: `https://robohash.org/${uuid()}`,
   },
   {
-    id: "asdf",
+    id: uuid(),
     brand: "Toyota",
     model: "Corolla",
     year: 2020,
-    imageUrl:
-      "https://cdn-motorshow-ssl.akamaized.net/wp-content/uploads/sites/2/2018/04/corolla_gli_2019.jpg",
+    imageUrl: `https://robohash.org/${uuid()}`,
   },
   {
-    id: "asdf",
+    id: uuid(),
     brand: "Toyota",
     model: "Corolla",
     year: 2020,
-    imageUrl:
-      "https://cdn-motorshow-ssl.akamaized.net/wp-content/uploads/sites/2/2018/04/corolla_gli_2019.jpg",
+    imageUrl: `https://robohash.org/${uuid()}`,
   },
   {
-    id: "asdf",
+    id: uuid(),
     brand: "Toyota",
     model: "Corolla",
     year: 2020,
-    imageUrl:
-      "https://cdn-motorshow-ssl.akamaized.net/wp-content/uploads/sites/2/2018/04/corolla_gli_2019.jpg",
+    imageUrl: `https://robohash.org/${uuid()}`,
   },
   {
-    id: "asdf",
+    id: uuid(),
     brand: "Toyota",
     model: "Corolla",
     year: 2020,
-    imageUrl:
-      "https://cdn-motorshow-ssl.akamaized.net/wp-content/uploads/sites/2/2018/04/corolla_gli_2019.jpg",
+    imageUrl: `https://robohash.org/${uuid()}`,
   },
   {
-    id: "asdf",
+    id: uuid(),
     brand: "Toyota",
     model: "Corolla",
     year: 2020,
-    imageUrl:
-      "https://cdn-motorshow-ssl.akamaized.net/wp-content/uploads/sites/2/2018/04/corolla_gli_2019.jpg",
+    imageUrl: `https://robohash.org/${uuid()}`,
   },
   {
-    id: "asdf",
+    id: uuid(),
     brand: "Toyota",
     model: "Corolla",
     year: 2020,
-    imageUrl:
-      "https://cdn-motorshow-ssl.akamaized.net/wp-content/uploads/sites/2/2018/04/corolla_gli_2019.jpg",
+    imageUrl: `https://robohash.org/${uuid()}`,
   },
   {
-    id: "asdf",
+    id: uuid(),
     brand: "Toyota",
     model: "Corolla",
     year: 2020,
-    imageUrl:
-      "https://cdn-motorshow-ssl.akamaized.net/wp-content/uploads/sites/2/2018/04/corolla_gli_2019.jpg",
+    imageUrl: `https://robohash.org/${uuid()}`,
   },
   {
-    id: "asdf",
+    id: uuid(),
     brand: "Toyota",
     model: "Corolla",
     year: 2020,
-    imageUrl:
-      "https://cdn-motorshow-ssl.akamaized.net/wp-content/uploads/sites/2/2018/04/corolla_gli_2019.jpg",
+    imageUrl: `https://robohash.org/${uuid()}`,
   },
   {
-    id: "asdf",
+    id: uuid(),
     brand: "Toyota",
     model: "Corolla",
     year: 2020,
-    imageUrl:
-      "https://cdn-motorshow-ssl.akamaized.net/wp-content/uploads/sites/2/2018/04/corolla_gli_2019.jpg",
+    imageUrl: `https://robohash.org/${uuid()}`,
   },
 ];

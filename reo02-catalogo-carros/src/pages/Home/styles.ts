@@ -1,19 +1,11 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
-  main {
-    height: 100%;
-
-    margin: 70px auto;
-    width: 70%;
-  }
-`;
-
 export const PageInfo = styled.div`
   display: flex;
   justify-content: space-between;
 
-  button {
+  a {
+    text-decoration: none;
     padding: 8px;
     background: var(--primary);
     color: white;
@@ -22,7 +14,7 @@ export const PageInfo = styled.div`
     border-radius: 5px;
 
     box-shadow: 1px 2px 5px 0 rgba(0, 0, 0, 0.5);
-
+    font-size: 12px;
     &:hover {
       background: var(--primary-hover);
     }
