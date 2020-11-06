@@ -18,14 +18,9 @@ export const Details: React.FC = () => {
   const { id } = useParams<DetailsParams>();
 
   const { find, remove } = useCarsContext();
-  const { goBack } = useHistory();
+  const { push } = useHistory();
 
   const car = find(id);
-
-  if (!car) {
-    // redirecionar para página de not found
-    goBack();
-  }
 
   const deleteCar = useCallback(async () => {
     const response = await Swal.fire({
@@ -43,10 +38,10 @@ export const Details: React.FC = () => {
       if (response.isConfirmed) {
         remove(car?.id);
 
-        goBack();
+        push("/");
       }
     }
-  }, [car, remove, goBack]);
+  }, [car, remove, push]);
 
   return (
     <Container>
