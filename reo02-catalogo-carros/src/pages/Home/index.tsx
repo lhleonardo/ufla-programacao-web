@@ -24,7 +24,7 @@ export const Home: React.FC = () => {
         <CarsContainer>
           {cars.length === 0 && <Empty />}
           {cars.map((car) => (
-            <CarItem id={car.id} onClick={() => push(`/details/${car.id}`)}>
+            <CarItem key={car.id} onClick={() => push(`/details/${car.id}`)}>
               <img src={car.imageUrl} alt={`${car.brand}-${car.model}`} />
               <span>{car.brand}</span>
               <strong>

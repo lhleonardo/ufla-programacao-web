@@ -17,6 +17,7 @@ interface CarContextData {
   find(id: string): Car | undefined;
   add(carInfo: Omit<Car, "id">): void;
   remove(id: string): void;
+  update(id: string, newData: Omit<Car, "id">): void;
 }
 
 const CarContext = createContext<CarContextData>({} as CarContextData);
@@ -50,8 +51,23 @@ export const CarProvider: React.FC = ({ children }) => {
     setCars((carsState) => carsState.filter((car) => car.id !== id));
   }, []);
 
+  const update = useCallback((id: string, newData: Omit<Car, "id">) => {
+    setCars((oldState) => {
+      return oldState.map((car) => {
+        if (car.id === id) {
+          return {
+            id,
+            ...newData,
+          };
+        }
+
+        return car;
+      });
+    });
+  }, []);
+
   return (
-    <CarContext.Provider value={{ cars, find, add, remove }}>
+    <CarContext.Provider value={{ cars, find, add, remove, update }}>
       {children}
     </CarContext.Provider>
   );
