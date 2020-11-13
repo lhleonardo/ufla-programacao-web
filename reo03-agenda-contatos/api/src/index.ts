@@ -1,5 +1,3 @@
-import express from "express";
+import app from "./app";
 
-const app = express();
-
-app.listen(3000, () => console.log("Executando"));
+app.listen(3000, () => console.log("API executando na porta 3000!"));
