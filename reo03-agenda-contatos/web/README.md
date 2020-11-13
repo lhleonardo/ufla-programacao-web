@@ -7,6 +7,8 @@ As ferramentas utilizadas nesse desenvolvimento foram:
 - React
 - Axios
 - Typescript
+- Styled Components
+- React Modal
 
 ## Como executar?
 
