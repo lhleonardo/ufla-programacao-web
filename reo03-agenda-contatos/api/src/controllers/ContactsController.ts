@@ -6,8 +6,26 @@ import Contact from "../models/Contact";
 
 class ContactsController {
   async index(req: Request, res: Response): Promise<Response> {
-    const response = await database<Contact>("contacts").select<Contact[]>();
-    return res.status(200).json(response);
+    const { operator, value } = req.query;
+
+    if (!operator) {
+      const response = await database<Contact>("contacts").select<Contact[]>();
+      return res.status(200).json(response);
+    }
+
+    if (
+      operator !== "phone" &&
+      operator !== "nickname" &&
+      operator !== "name"
+    ) {
+      return res.status(400).json({ message: "Invalid operator for search." });
+    }
+
+    const contacts = await database<Contact>("contacts")
+      .select("*")
+      .where(operator, "ilike", `%${value}%`);
+
+    return res.status(200).json(contacts);
   }
 
   async create(req: Request, res: Response): Promise<Response> {
