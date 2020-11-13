@@ -4,14 +4,15 @@ Diretório destinado a aplicação web da Agenda de Contatos
 
 As ferramentas utilizadas nesse desenvolvimento foram:
 
-* React 
-* Axios
-* Typescript
-
+- React
+- Axios
+- Typescript
 
 ## Como executar?
 
 No terminal, localizado no diretório da aplicação, executar o comando: `npm start` (ou, caso esteja utilizando Yarn, `yarn start`)
+
+PS: Não esqueça de executar a API (`../api`) da aplicação para que os dados possam ser persistidos e acessados.
 
 ## Autor
 
