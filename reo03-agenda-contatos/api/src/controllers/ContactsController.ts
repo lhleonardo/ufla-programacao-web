@@ -21,6 +21,12 @@ class ContactsController {
       return res.status(400).json({ message: "Invalid operator for search." });
     }
 
+    if (!value) {
+      return res
+        .status(400)
+        .json({ message: "The value of search is required." });
+    }
+
     const contacts = await database<Contact>("contacts")
       .select("*")
       .where(operator, "ilike", `%${value}%`);
