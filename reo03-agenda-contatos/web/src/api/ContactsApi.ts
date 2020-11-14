@@ -2,7 +2,7 @@ import axios from "axios";
 import Contact from "../models/Contact";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "http://localhost:3333",
 });
 
 interface ICreateContact {
@@ -20,7 +20,7 @@ interface IUpdateContact {
   data: Omit<Contact, "id">;
 }
 
-export default class ContactsApi {
+class ContactsApi {
   async store({ name, nickname, phone }: ICreateContact): Promise<Contact> {
     const response = await api.post<Contact>("/contacts", {
       name,
@@ -49,3 +49,5 @@ export default class ContactsApi {
     await api.delete(`/contacts/${id}`);
   }
 }
+
+export default new ContactsApi();

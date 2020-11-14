@@ -10,6 +10,7 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     -webkit-font-smoothing: antialiased;
+    background: #403f4c;
   }
 
   body, input, button, span, select {

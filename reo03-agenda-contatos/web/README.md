@@ -8,7 +8,9 @@ As ferramentas utilizadas nesse desenvolvimento foram:
 - Axios
 - Typescript
 - Styled Components
+- Polished
 - React Modal
+- React Icons
 
 ## Como executar?
 
