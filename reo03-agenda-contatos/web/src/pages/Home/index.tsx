@@ -5,6 +5,8 @@ import Contact from "../../models/Contact";
 
 import { FiSearch } from "react-icons/fi";
 
+import Swal from "sweetalert2";
+
 import {
   Container,
   Header,
@@ -12,10 +14,13 @@ import {
   ContentInfo,
   ContactsContainer,
   ContactItem,
+  ContactItemContent,
+  SelectedContactItem,
   ContactItemAvatar,
   Divider,
   AddButton,
 } from "./styles";
+import EditContactModal from "../../components/EditContactModal";
 
 interface IContactType extends Contact {
   iconText: string;
@@ -33,8 +38,10 @@ function generateIconForContact(contact: Contact): IContactType {
 
   if (separatedName.length === 1) {
     icon = separatedName[0].charAt(0);
-  } else if (separatedName.length === 2) {
-    icon = separatedName[0].charAt(0) + separatedName[1].charAt(0);
+  } else if (separatedName.length >= 2) {
+    icon =
+      separatedName[0].charAt(0) +
+      separatedName[separatedName.length - 1].charAt(0);
   } else {
     icon = "?";
   }
@@ -48,12 +55,24 @@ function generateIconForContact(contact: Contact): IContactType {
 const Home: React.FC = () => {
   const [contacts, setContacts] = useState<IContactType[]>([]);
 
-  const [formOpened, setFormOpened] = useState(false);
-  const toggleForm = useCallback(() => setFormOpened(!formOpened), [
-    formOpened,
-  ]);
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
 
-  const addNewContact = useCallback(
+  const [isModalCreateContactOpened, setModalCreateContactOpened] = useState(
+    false
+  );
+  const [isModalEditContactOpened, setModalEditContactOpened] = useState(false);
+
+  const toggleModalCreateFormOpen = useCallback(
+    () => setModalCreateContactOpened(!isModalCreateContactOpened),
+    [isModalCreateContactOpened]
+  );
+
+  const toggleModalEditFormOpen = useCallback(
+    () => setModalEditContactOpened(!isModalEditContactOpened),
+    [isModalEditContactOpened]
+  );
+
+  const handleSubmitCreateContact = useCallback(
     async ({ nickname, phone, name }: Omit<Contact, "id">) => {
       const response = await api.store({ nickname, phone, name });
 
@@ -63,6 +82,39 @@ const Home: React.FC = () => {
     },
     []
   );
+
+  const handleSubmitEditContact = useCallback(async (data: Contact) => {
+    const updatedContact = await api.update({ id: data.id, data });
+
+    setContacts((currentContacts) => {
+      return currentContacts.map((contact) =>
+        contact.id === data.id
+          ? generateIconForContact(updatedContact)
+          : contact
+      );
+    });
+  }, []);
+
+  const handleSubmitDeleteContact = useCallback(async (id: string) => {
+    const response = await Swal.fire({
+      title: "Você tem certeza?",
+      text: "Isso removerá o contato permanentemente!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim, deletar!",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (response.isConfirmed) {
+      await api.delete(id);
+
+      setContacts((currentContacts) =>
+        currentContacts.filter((contact) => contact.id !== id)
+      );
+    }
+  }, []);
 
   // busca os dados na api
   const search = useCallback(async (event: any) => {
@@ -80,6 +132,10 @@ const Home: React.FC = () => {
     const contactsWithIcon = response.map<IContactType>(generateIconForContact);
 
     setContacts(contactsWithIcon);
+  }, []);
+
+  const onClickContact = useCallback((contact: IContactType) => {
+    setSelectedContact(contact);
   }, []);
 
   // carrega os dados da api
@@ -106,7 +162,7 @@ const Home: React.FC = () => {
         <ContentInfo>
           <div>
             <h2>Busque pelos seus contatos</h2>
-            <AddButton onClick={() => toggleForm()}>+</AddButton>
+            <AddButton onClick={() => toggleModalCreateFormOpen()}>+</AddButton>
           </div>
           <form onSubmit={search}>
             <select name="operator" required>
@@ -125,25 +181,56 @@ const Home: React.FC = () => {
           </form>
         </ContentInfo>
 
-        <ContactsContainer>
+        <ContactsContainer type="crossfade">
           {contacts.map((contact) => (
-            <ContactItem key={contact.id}>
-              <ContactItemAvatar>{contact.iconText}</ContactItemAvatar>
-              <Divider />
-              <div className="details">
-                <h3>{contact.name}</h3>
-                <h4>{contact.nickname}</h4>
-                <span>{contact.phone}</span>
+            <ContactItem
+              key={contact.id}
+              layoutId={contact.id}
+              onClick={() => onClickContact(contact)}
+            >
+              <div className="logo">
+                <ContactItemAvatar>{contact.iconText}</ContactItemAvatar>
+                <Divider />
               </div>
+              <ContactItemContent>
+                <div className="details">
+                  <h3>{contact.name}</h3>
+                  <h4>{contact.nickname}</h4>
+                  <span>{contact.phone}</span>
+                </div>
+                {selectedContact && selectedContact.id === contact.id && (
+                  <SelectedContactItem>
+                    <button
+                      className="editar"
+                      onClick={() => toggleModalEditFormOpen()}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="excluir"
+                      onClick={() => handleSubmitDeleteContact(contact.id)}
+                    >
+                      Excluir
+                    </button>
+                  </SelectedContactItem>
+                )}
+              </ContactItemContent>
             </ContactItem>
           ))}
         </ContactsContainer>
       </MainContent>
 
       <CreateContactModal
-        isOpen={formOpened}
-        toggleOpen={toggleForm}
-        handleSubmit={(data) => addNewContact(data)}
+        isOpen={isModalCreateContactOpened}
+        toggleOpen={toggleModalCreateFormOpen}
+        handleSubmit={(data) => handleSubmitCreateContact(data)}
+      />
+
+      <EditContactModal
+        isOpen={isModalEditContactOpened}
+        toggleOpen={toggleModalEditFormOpen}
+        handleSubmit={(data) => handleSubmitEditContact(data)}
+        initialData={selectedContact}
       />
     </Container>
   );
