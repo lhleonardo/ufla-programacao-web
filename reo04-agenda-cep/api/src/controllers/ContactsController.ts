@@ -35,10 +35,31 @@ class ContactsController {
   }
 
   async create(req: Request, res: Response): Promise<Response> {
-    const { name, phone, nickname } = req.body;
+    const {
+      name,
+      phone,
+      nickname,
+      cep,
+      address,
+      number,
+      neighborhood,
+      city,
+      state,
+    } = req.body;
 
     const response = await database<Contact>("contacts")
-      .insert({ id: uuid(), name, phone, nickname })
+      .insert({
+        id: uuid(),
+        name,
+        phone,
+        nickname,
+        cep,
+        address,
+        number,
+        neighborhood,
+        city,
+        state,
+      })
       .returning("*");
 
     return res.status(201).json(response[0]);
@@ -46,10 +67,30 @@ class ContactsController {
 
   async update(req: Request, res: Response): Promise<Response> {
     const { contactId } = req.params;
-    const { name, phone, nickname } = req.body;
+    const {
+      name,
+      phone,
+      nickname,
+      cep,
+      address,
+      number,
+      neighborhood,
+      city,
+      state,
+    } = req.body;
 
     const data = await database<Contact>("contacts")
-      .update({ name, nickname, phone })
+      .update({
+        name,
+        nickname,
+        phone,
+        cep,
+        address,
+        number,
+        neighborhood,
+        city,
+        state,
+      })
       .where("id", contactId)
       .returning("*");
 

@@ -4,6 +4,13 @@ exports.up = (knex) => {
     table.string("name");
     table.string("nickname");
     table.string("phone");
+
+    table.string("cep");
+    table.string("address");
+    table.string("neighborhood");
+    table.string("number");
+    table.string("city");
+    table.string("state");
   });
 };
 
