@@ -7,6 +7,13 @@ interface IContactData {
   name: string;
   nickname: string;
   phone: string;
+
+  cep: string;
+  address: string;
+  number: string | number;
+  neighborhood: string;
+  city: string;
+  state: string;
 }
 
 interface IEditContactModalProps {
@@ -32,6 +39,12 @@ const EditContactModal: React.FC<IEditContactModalProps> = ({
         name: event.target.name.value,
         nickname: event.target.nickname.value,
         phone: event.target.phone.value,
+        cep: event.target.cep.value,
+        address: event.target.address.value,
+        number: event.target.number.value,
+        neighborhood: event.target.neighborhood.value,
+        city: event.target.city.value,
+        state: event.target.state.value,
       };
 
       handleSubmit(data);

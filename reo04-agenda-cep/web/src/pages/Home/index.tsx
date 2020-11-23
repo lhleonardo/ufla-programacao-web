@@ -73,8 +73,28 @@ const Home: React.FC = () => {
   );
 
   const handleSubmitCreateContact = useCallback(
-    async ({ nickname, phone, name }: Omit<Contact, "id">) => {
-      const response = await api.store({ nickname, phone, name });
+    async ({
+      nickname,
+      phone,
+      name,
+      address,
+      cep,
+      city,
+      neighborhood,
+      number,
+      state,
+    }: Omit<Contact, "id">) => {
+      const response = await api.store({
+        nickname,
+        phone,
+        name,
+        address,
+        cep,
+        city,
+        neighborhood,
+        number,
+        state,
+      });
 
       const newContact = generateIconForContact(response);
 

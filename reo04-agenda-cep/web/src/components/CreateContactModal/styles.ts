@@ -9,12 +9,29 @@ export const Container = styled.div`
 export const Form = styled.form`
   margin-top: 12px;
 
-  label {
+  > label {
     display: block;
     font-weight: 500;
 
     & + label {
       margin-top: 8px;
+    }
+  }
+
+  div.divider {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+
+    label {
+      flex: 1;
+      font-weight: 500;
+
+      & + label {
+        padding-left: 10px;
+      }
     }
   }
 
@@ -29,6 +46,10 @@ export const Form = styled.form`
     border-radius: 4px;
 
     font-size: 14px;
+
+    &:read-only {
+      background: #ddd;
+    }
   }
 
   button {
