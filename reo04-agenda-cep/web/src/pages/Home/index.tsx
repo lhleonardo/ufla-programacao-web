@@ -216,6 +216,7 @@ const Home: React.FC = () => {
                   <h3>{contact.name}</h3>
                   <h4>{contact.nickname}</h4>
                   <span>{contact.phone}</span>
+                  <span>{`${contact.city} - ${contact.state}`}</span>
                 </div>
                 {selectedContact && selectedContact.id === contact.id && (
                   <SelectedContactItem>

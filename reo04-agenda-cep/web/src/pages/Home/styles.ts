@@ -110,7 +110,7 @@ export const ContactsContainer = styled(AnimateSharedLayout)`
 export const ContactItem = styled(motion.div)`
   margin: 10px 0;
   background: #121420;
-  height: 150px;
+  height: 200px;
   padding: 5px;
   border-radius: 20px;
 
