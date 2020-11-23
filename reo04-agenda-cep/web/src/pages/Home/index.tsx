@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import api from "../../api/ContactsApi";
-import CreateContactModal from "../../components/CreateContactModal";
+import PersistContactModal from "../../components/PersistContactModal";
 import Contact from "../../models/Contact";
 
 import { FiSearch } from "react-icons/fi";
@@ -20,7 +20,6 @@ import {
   Divider,
   AddButton,
 } from "./styles";
-import EditContactModal from "../../components/EditContactModal";
 
 interface IContactType extends Contact {
   iconText: string;
@@ -240,17 +239,17 @@ const Home: React.FC = () => {
         </ContactsContainer>
       </MainContent>
 
-      <CreateContactModal
+      <PersistContactModal
         isOpen={isModalCreateContactOpened}
         toggleOpen={toggleModalCreateFormOpen}
-        handleSubmit={(data) => handleSubmitCreateContact(data)}
+        handleCreateContact={(data) => handleSubmitCreateContact(data)}
       />
 
-      <EditContactModal
+      <PersistContactModal
         isOpen={isModalEditContactOpened}
         toggleOpen={toggleModalEditFormOpen}
-        handleSubmit={(data) => handleSubmitEditContact(data)}
-        initialData={selectedContact}
+        handleUpdateContact={(data) => handleSubmitEditContact(data)}
+        initialData={selectedContact!!}
       />
     </Container>
   );

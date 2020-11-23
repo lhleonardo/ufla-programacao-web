@@ -63,8 +63,31 @@ class ContactsApi {
     return response.data;
   }
 
-  async update({ id, data }: IUpdateContact): Promise<Contact> {
-    const response = await axiosClient.put<Contact>(`/contacts/${id}`, data);
+  async update({
+    id,
+    data: {
+      name,
+      nickname,
+      phone,
+      address,
+      cep,
+      city,
+      neighborhood,
+      number,
+      state,
+    },
+  }: IUpdateContact): Promise<Contact> {
+    const response = await axiosClient.put<Contact>(`/contacts/${id}`, {
+      name,
+      nickname,
+      phone,
+      address,
+      cep,
+      city,
+      neighborhood,
+      number,
+      state,
+    });
 
     return response.data;
   }

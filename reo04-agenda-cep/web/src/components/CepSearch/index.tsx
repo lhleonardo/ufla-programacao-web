@@ -24,9 +24,12 @@ interface ICepSearchProps extends InputHTMLAttributes<HTMLInputElement> {
 export const CepSearchInput: React.FC<ICepSearchProps> = ({
   name,
   handleCepIsFound,
+  defaultValue,
   ...rest
 }) => {
-  const [cepInputText, setCepInputText] = useState<string>("");
+  const [cepInputText, setCepInputText] = useState<string>(
+    defaultValue ? (defaultValue as string) : ""
+  );
 
   const handleCepChange = useCallback(
     async (event: ChangeEvent<HTMLInputElement>) =>
