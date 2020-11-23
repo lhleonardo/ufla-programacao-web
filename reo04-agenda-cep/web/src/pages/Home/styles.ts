@@ -99,11 +99,6 @@ export const ContentInfo = styled.div`
 `;
 
 export const ContactsContainer = styled(AnimateSharedLayout)`
-  display: grid;
-
-  grid-template-columns: 1fr;
-  grid-gap: 10px;
-
   margin-top: 16px;
 `;
 
