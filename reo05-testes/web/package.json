@@ -52,6 +52,7 @@
     "@types/axios": "^0.14.0",
     "@types/react-input-mask": "^2.0.5",
     "@types/react-modal": "^3.10.6",
-    "@types/styled-components": "^5.1.4"
+    "@types/styled-components": "^5.1.4",
+    "axios-mock-adapter": "^1.19.0"
   }
 }

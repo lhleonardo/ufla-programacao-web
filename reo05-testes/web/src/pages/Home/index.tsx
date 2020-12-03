@@ -177,7 +177,7 @@ const Home: React.FC = () => {
         <h1>Agenda Telefônica</h1>
       </Header>
 
-      <MainContent>
+      <MainContent data-testid="main-content">
         <ContentInfo>
           <div>
             <h2>Busque pelos seus contatos</h2>
