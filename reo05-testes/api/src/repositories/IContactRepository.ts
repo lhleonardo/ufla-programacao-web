@@ -1,7 +1,17 @@
 import Contact from "../models/Contact";
 
 export interface IListContactParams {
-  operator: string;
+  operator:
+    | "id"
+    | "name"
+    | "phone"
+    | "nickname"
+    | "cep"
+    | "address"
+    | "neighborhood"
+    | "number"
+    | "state"
+    | "city";
   value: string;
 }
 

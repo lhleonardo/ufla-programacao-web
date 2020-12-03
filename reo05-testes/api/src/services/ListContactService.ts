@@ -2,18 +2,18 @@ import AppError from "../errors/AppError";
 import Contact from "../models/Contact";
 import IContactRepository from "../repositories/IContactRepository";
 
-interface IDeleteContactRequest {
-  operator: string;
-  value: string;
+interface IListContactRequest {
+  operator: string | undefined;
+  value: string | undefined;
 }
 
-export default class DeleteContactService {
+export default class ListContactService {
   constructor(private repository: IContactRepository) {}
 
   public async execute({
     operator,
     value,
-  }: IDeleteContactRequest): Promise<Contact[]> {
+  }: IListContactRequest): Promise<Contact[]> {
     if (
       operator !== "phone" &&
       operator !== "nickname" &&

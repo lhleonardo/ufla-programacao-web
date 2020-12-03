@@ -1,10 +1,13 @@
 import { celebrate, Joi, Segments } from "celebrate";
 import { Router } from "express";
 import ContactsController from "../controllers/ContactsController";
+import ContactRepository from "../repositories/ContactRepository";
 
 const routes = Router();
 
-const contactsController = new ContactsController();
+const repository = new ContactRepository();
+
+const contactsController = new ContactsController(repository);
 
 routes.get("/contacts", contactsController.index);
 

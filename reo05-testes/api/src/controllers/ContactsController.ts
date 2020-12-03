@@ -1,35 +1,23 @@
 import { Request, Response } from "express";
-import database from "../database";
 
-import Contact from "../models/Contact";
-import ManagerContact from "../services/ManagerContact";
+import IContactRepository from "../repositories/IContactRepository";
+import CreateContactService from "../services/CreateContactService";
+import DeleteContactService from "../services/DeleteContactService";
+import ListContactService from "../services/ListContactService";
+import UpdateContactService from "../services/UpdateContactService";
 
 class ContactsController {
-  private manager: ManagerContact;
-
-  constructor() {
-    this.manager = new ManagerContact();
-  }
+  constructor(private repository: IContactRepository) {}
 
   async index(req: Request, res: Response): Promise<Response> {
     const { operator, value } = req.query;
 
-    if (
-      operator !== "phone" &&
-      operator !== "nickname" &&
-      operator !== "name"
-    ) {
-      return res.status(400).json({ message: "Invalid operator for search." });
-    }
+    const listContacts: ListContactService = new ListContactService(
+      this.repository
+    );
 
-    if (!value) {
-      return res
-        .status(400)
-        .json({ message: "The value of search is required." });
-    }
-
-    const contacts = await this.manager.list({
-      operator,
+    const contacts = await listContacts.execute({
+      operator: operator as string,
       value: value as string,
     });
 
@@ -49,16 +37,20 @@ class ContactsController {
       state,
     } = req.body;
 
-    const response = await this.manager.create({
-      name,
-      phone,
-      nickname,
-      cep,
-      address,
-      number,
-      neighborhood,
-      city,
-      state,
+    const createContactService = new CreateContactService(this.repository);
+
+    const response = await createContactService.execute({
+      contact: {
+        name,
+        phone,
+        nickname,
+        cep,
+        address,
+        number,
+        neighborhood,
+        city,
+        state,
+      },
     });
 
     return res.status(201).json(response);
@@ -78,16 +70,21 @@ class ContactsController {
       state,
     } = req.body;
 
-    const response = await this.manager.update(contactId, {
-      name,
-      phone,
-      nickname,
-      cep,
-      address,
-      number,
-      neighborhood,
-      city,
-      state,
+    const updateContactService = new UpdateContactService(this.repository);
+
+    const response = await updateContactService.execute({
+      contactId,
+      data: {
+        name,
+        phone,
+        nickname,
+        cep,
+        address,
+        number,
+        neighborhood,
+        city,
+        state,
+      },
     });
 
     return res.status(200).json(response);
@@ -96,7 +93,7 @@ class ContactsController {
   async delete(req: Request, res: Response): Promise<Response> {
     const { contactId } = req.params;
 
-    await database<Contact>("contacts").delete().where("id", contactId);
+    await new DeleteContactService(this.repository).execute({ contactId });
 
     return res.status(204).send();
   }
