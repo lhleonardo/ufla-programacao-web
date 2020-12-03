@@ -1,25 +1,23 @@
 import { Request, Response } from "express";
+import ContactRepository from "../repositories/ContactRepository";
 
-import IContactRepository from "../repositories/IContactRepository";
 import CreateContactService from "../services/CreateContactService";
 import DeleteContactService from "../services/DeleteContactService";
 import ListContactService from "../services/ListContactService";
 import UpdateContactService from "../services/UpdateContactService";
 
 class ContactsController {
-  constructor(private repository: IContactRepository) {}
-
   async index(req: Request, res: Response): Promise<Response> {
     const { operator, value } = req.query;
 
-    const listContacts: ListContactService = new ListContactService(
-      this.repository
-    );
+    const repository = new ContactRepository();
+    const listContacts = new ListContactService(repository);
 
-    const contacts = await listContacts.execute({
-      operator: operator as string,
-      value: value as string,
-    });
+    const contacts = await listContacts.execute(
+      operator
+        ? { params: { operator: operator as string, value: value as string } }
+        : {}
+    );
 
     return res.status(200).json(contacts);
   }
@@ -37,7 +35,8 @@ class ContactsController {
       state,
     } = req.body;
 
-    const createContactService = new CreateContactService(this.repository);
+    const repository = new ContactRepository();
+    const createContactService = new CreateContactService(repository);
 
     const response = await createContactService.execute({
       contact: {
@@ -70,7 +69,8 @@ class ContactsController {
       state,
     } = req.body;
 
-    const updateContactService = new UpdateContactService(this.repository);
+    const repository = new ContactRepository();
+    const updateContactService = new UpdateContactService(repository);
 
     const response = await updateContactService.execute({
       contactId,
@@ -93,10 +93,11 @@ class ContactsController {
   async delete(req: Request, res: Response): Promise<Response> {
     const { contactId } = req.params;
 
-    await new DeleteContactService(this.repository).execute({ contactId });
+    const repository = new ContactRepository();
+    await new DeleteContactService(repository).execute({ contactId });
 
     return res.status(204).send();
   }
 }
 
-export default ContactsController;
+export default new ContactsController();

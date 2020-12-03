@@ -3,30 +3,37 @@ import Contact from "../models/Contact";
 import IContactRepository from "../repositories/IContactRepository";
 
 interface IListContactRequest {
-  operator: string | undefined;
-  value: string | undefined;
+  params?: {
+    operator: string;
+    value: string;
+  };
 }
 
 export default class ListContactService {
   constructor(private repository: IContactRepository) {}
 
-  public async execute({
-    operator,
-    value,
-  }: IListContactRequest): Promise<Contact[]> {
+  public async execute({ params }: IListContactRequest): Promise<Contact[]> {
     if (
-      operator !== "phone" &&
-      operator !== "nickname" &&
-      operator !== "name"
+      params &&
+      params?.operator !== "phone" &&
+      params?.operator !== "nickname" &&
+      params?.operator !== "name"
     ) {
       throw new AppError("Invalid operator for search");
     }
 
-    if (!value) {
+    if (params && !params.value) {
       throw new AppError("The value of search is required");
     }
 
-    const response = await this.repository.list({ operator, value });
+    console.log(this.repository);
+
+    const response = await this.repository.list(
+      params && {
+        operator: params.operator,
+        value: params.value,
+      }
+    );
 
     return response;
   }

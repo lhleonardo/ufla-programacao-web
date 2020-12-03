@@ -5,18 +5,15 @@ import Contact from "../models/Contact";
 import IContactRepository, { IListContactParams } from "./IContactRepository";
 
 class ContactRepository implements IContactRepository {
-  public async list({
-    operator,
-    value,
-  }: IListContactParams): Promise<Contact[]> {
-    if (!operator) {
+  public async list(params: IListContactParams): Promise<Contact[]> {
+    if (!params) {
       const response = await database<Contact>("contacts").select<Contact[]>();
       return response;
     }
 
     const contacts = await database<Contact>("contacts")
       .select("*")
-      .where(operator, "ilike", `%${value}%`);
+      .where(params.operator, "ilike", `%${params.value}%`);
 
     return contacts;
   }
