@@ -47,5 +47,7 @@ describe("CreateContactService", () => {
     });
 
     const contacts = await listContact.execute({});
+
+    expect(contacts).toBeInstanceOf(Array);
   });
 });
