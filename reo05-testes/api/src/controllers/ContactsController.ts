@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import Contact from "../models/Contact";
 import ContactRepository from "../repositories/ContactRepository";
 
 import CreateContactService from "../services/CreateContactService";
@@ -13,11 +14,16 @@ class ContactsController {
     const repository = new ContactRepository();
     const listContacts = new ListContactService(repository);
 
-    const contacts = await listContacts.execute(
-      operator
-        ? { params: { operator: operator as string, value: value as string } }
-        : {}
-    );
+    const searchConfig = operator
+      ? {
+          params: {
+            operator: operator as keyof Contact,
+            value: value as string,
+          },
+        }
+      : {};
+
+    const contacts = await listContacts.execute(searchConfig);
 
     return res.status(200).json(contacts);
   }

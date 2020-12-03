@@ -4,7 +4,7 @@ import IContactRepository from "../repositories/IContactRepository";
 
 interface IListContactRequest {
   params?: {
-    operator: string;
+    operator: keyof Contact;
     value: string;
   };
 }
@@ -25,8 +25,6 @@ export default class ListContactService {
     if (params && !params.value) {
       throw new AppError("The value of search is required");
     }
-
-    console.log(this.repository);
 
     const response = await this.repository.list(
       params && {

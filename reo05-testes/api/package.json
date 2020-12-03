@@ -12,14 +12,14 @@
     "express": "^4.17.1",
     "knex": "^0.21.12",
     "pg": "^8.5.0",
-    "ts-node": "^9.0.0",
     "ts-jest": "^26.4.4",
+    "ts-node": "^9.0.0",
     "uuid": "^8.3.1"
   },
   "scripts": {
     "dev": "tsnd -r tsconfig-paths/register --inspect --transpile-only src/index.ts",
     "db.update": "knex migrate:latest",
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
   },
   "devDependencies": {
     "@types/cors": "^2.8.8",
@@ -27,6 +27,7 @@
     "@types/jest": "^26.0.16",
     "@types/knex": "^0.16.1",
     "@types/node": "^14.14.7",
+    "@types/supertest": "^2.0.10",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",
@@ -40,6 +41,7 @@
     "nodemon": "^2.0.6",
     "prettier": "^2.1.2",
     "sucrase": "^3.16.0",
+    "supertest": "^6.0.1",
     "ts-node-dev": "^1.0.0",
     "typescript": "^4.0.5"
   }

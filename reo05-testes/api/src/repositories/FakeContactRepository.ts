@@ -6,15 +6,16 @@ import IContactRepository, { IListContactParams } from "./IContactRepository";
 export default class FakeContactRepository implements IContactRepository {
   private data: Contact[] = [];
 
-  public async list({
-    operator,
-    value,
-  }: IListContactParams): Promise<Contact[]> {
-    const filtered = this.data.filter((contact) => {
-      return contact[operator] === value;
-    });
+  public async list(params: IListContactParams): Promise<Contact[]> {
+    if (params) {
+      const filtered = this.data.filter((contact) => {
+        return contact[params.operator] === params.value;
+      });
 
-    return filtered;
+      return filtered;
+    }
+
+    return this.data;
   }
 
   public async insert(data: Omit<Contact, "id">): Promise<Contact> {

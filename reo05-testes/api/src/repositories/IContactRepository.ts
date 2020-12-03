@@ -1,7 +1,7 @@
 import Contact from "../models/Contact";
 
 export interface IListContactParams {
-  operator: string;
+  operator: keyof Contact;
   value: string;
 }
 
