@@ -22,6 +22,6 @@ export default class TasksController {
       })
       .returning("*");
 
-    return response.status(200).json({ task: createdTask[0] });
+    return response.status(200).json(createdTask[0]);
   }
 }
