@@ -6,31 +6,29 @@ import Category from '../models/Category';
 import AppError from '../errors/AppError';
 import TransactionsRepository from '../repositories/TransactionsRepository';
 
+/**
+ * Não deverá atualizar o tipo e o valor após ser lançada
+ */
 interface Request {
+  id: string;
   title: string;
-  categoryName: string;
-  type: 'income' | 'outcome';
-  value: number;
+  category: string;
 }
 
-class CreateTransactionService {
+class UpdateTransactionService {
   public async execute({
+    id,
     title,
-    categoryName,
-    type,
-    value,
+    category: categoryName,
   }: Request): Promise<Transaction> {
-    if (value <= 0) {
-      throw new AppError('O valor da transação precisa ser positivo');
-    }
 
     const transactionRepository = getCustomRepository(TransactionsRepository);
     const categoryRepository = getRepository(Category);
 
-    const { total } = await transactionRepository.getBalance();
+    const transaction = await transactionRepository.findOne(id);
 
-    if (type === 'outcome' && value > total) {
-      throw new AppError('Saldo insuficiente para débito');
+    if (!transaction) {
+      throw new AppError("Transação não existente");
     }
 
     let category = await categoryRepository.findOne({
@@ -43,12 +41,8 @@ class CreateTransactionService {
       await categoryRepository.save(category);
     }
 
-    const transaction = transactionRepository.create({
-      title,
-      type,
-      value,
-      category,
-    });
+    transaction.title = title;
+    transaction.category = category;
 
     await transactionRepository.save(transaction);
 
@@ -56,4 +50,4 @@ class CreateTransactionService {
   }
 }
 
-export default CreateTransactionService;
+export default UpdateTransactionService;

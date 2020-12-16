@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
 import { Container } from './styles';
 
-import Logo from '../../assets/logo.svg';
+import Logo from '../../assets/new-logo.svg';
 
 interface HeaderProps {
   size?: 'small' | 'large';
@@ -32,10 +32,11 @@ const NavLink: React.FC<NavLinkProps> = ({ path, text }) => {
 };
 
 const Header: React.FC<HeaderProps> = ({ size = 'large' }: HeaderProps) => {
+  const history = useHistory();
   return (
     <Container size={size}>
       <header>
-        <img src={Logo} alt="GoFinances" />
+        <img src={Logo} alt="GoFinances" onClick={() => history.push('/')} />
         <nav>
           <NavLink path="/" text="Listagem" />
           <NavLink path="/new" text="Cadastrar" />

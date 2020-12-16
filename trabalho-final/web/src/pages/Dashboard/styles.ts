@@ -24,7 +24,7 @@ export const CardContainer = styled.section`
 `;
 
 export const Card = styled.div`
-  background: ${({ total }: CardProps): string => (total ? '#FF872C' : '#fff')};
+  background: ${({ total }: CardProps): string => (total ? '#ffa45f' : '#fff')};
   padding: 22px 32px;
   border-radius: 5px;
   color: ${({ total }: CardProps): string => (total ? '#fff' : '#363F5F')};
@@ -76,8 +76,6 @@ export const TableContainer = styled.section`
 
       tr:hover {
         background-color: rgba(255, 255, 255, 0.4);
-
-        transform: translateX(15px);
       }
 
       td {
@@ -101,6 +99,12 @@ export const TableContainer = styled.section`
         }
       }
 
+      td.actions {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+
       td:first-child {
         border-radius: 8px 0 0 8px;
       }
@@ -109,5 +113,27 @@ export const TableContainer = styled.section`
         border-radius: 0 8px 8px 0;
       }
     }
+  }
+`;
+
+export const Empty = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+
+  margin-top: 20%;
+
+  img {
+    width: 120px;
+  }
+
+  span {
+    margin-top: 10px;
+
+    font-size: 18px;
   }
 `;

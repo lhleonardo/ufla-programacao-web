@@ -5,11 +5,11 @@ interface ContainerProps {
 }
 
 export const Container = styled.div<ContainerProps>`
-  background: #5636d3;
+  background: #7159c1;
   padding: 30px 0;
 
   header {
-    width: 1120px;
+    width: 1100px;
     margin: 0 auto;
     padding: ${({ size }) => (size === 'small' ? '0 20px ' : '0 20px 150px')};
     display: flex;
@@ -34,7 +34,7 @@ export const Container = styled.div<ContainerProps>`
         }
 
         &.selected {
-          border-bottom: 2px solid #ff872c;
+          border-bottom: 2px solid #fff;
         }
       }
     }

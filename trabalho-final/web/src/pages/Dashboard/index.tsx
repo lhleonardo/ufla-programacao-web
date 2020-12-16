@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import income from '../../assets/income.svg';
+import dislike from '../../assets/dislike.svg';
 import outcome from '../../assets/outcome.svg';
 import total from '../../assets/total.svg';
 
@@ -10,7 +11,16 @@ import Header from '../../components/Header';
 
 import formatValue from '../../utils/formatValue';
 
-import { Container, CardContainer, Card, TableContainer } from './styles';
+import { FiEdit, FiTrash2 } from 'react-icons/fi';
+
+import {
+  Container,
+  CardContainer,
+  Card,
+  TableContainer,
+  Empty,
+} from './styles';
+import { Link } from 'react-router-dom';
 
 interface Transaction {
   id: string;
@@ -20,7 +30,7 @@ interface Transaction {
   formattedDate: string;
   type: 'income' | 'outcome';
   category: { id?: string; title: string };
-  created_at: Date;
+  createdAt: Date;
 }
 
 interface Balance {
@@ -60,7 +70,7 @@ const Dashboard: React.FC = () => {
       const newTransactions: Transaction[] = transactionsResponse.map(
         transaction => ({
           ...transaction,
-          formattedDate: new Date(transaction.created_at).toLocaleDateString(
+          formattedDate: new Date(transaction.createdAt).toLocaleDateString(
             'pt-br',
           ),
           formattedValue: formatValue(transaction.value),
@@ -103,30 +113,48 @@ const Dashboard: React.FC = () => {
         </CardContainer>
 
         <TableContainer>
-          <table>
-            <thead>
-              <tr>
-                <th>Título</th>
-                <th>Preço</th>
-                <th>Categoria</th>
-                <th>Data</th>
-              </tr>
-            </thead>
+          {transactions.length === 0 && (
+            <Empty>
+              <img src={dislike} alt="Dislike" />
+              <span>Você ainda não registrou nenhuma transação</span>
+            </Empty>
+          )}
 
-            <tbody>
-              {transactions.map(transaction => (
-                <tr key={transaction.id}>
-                  <td className="title">{transaction.title}</td>
-                  <td className={transaction.type}>
-                    {transaction.type === 'outcome' && ' - '}
-                    {transaction.formattedValue}
-                  </td>
-                  <td>{transaction.category.title}</td>
-                  <td>{transaction.formattedDate}</td>
+          {transactions.length > 0 && (
+            <table>
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Preço</th>
+                  <th>Categoria</th>
+                  <th>Data</th>
+                  <th>Ações</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {transactions.map(transaction => (
+                  <tr key={transaction.id}>
+                    <td className="title">{transaction.title}</td>
+                    <td className={transaction.type}>
+                      {transaction.type === 'outcome' && ' - '}
+                      {transaction.formattedValue}
+                    </td>
+                    <td>{transaction.category.title}</td>
+                    <td>{transaction.formattedDate}</td>
+                    <td className="actions">
+                      <Link to={`/edit/${transaction.id}`}>
+                        <FiEdit size={20} color="#ffa45f" />
+                      </Link>
+                      <Link to="/delete">
+                        <FiTrash2 color="#e83f5b" size={20} />
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </TableContainer>
       </Container>
     </>

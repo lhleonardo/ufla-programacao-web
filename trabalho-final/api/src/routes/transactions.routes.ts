@@ -6,6 +6,7 @@ import TransactionsRepository from '../repositories/TransactionsRepository';
 import CreateTransactionService from '../services/CreateTransactionService';
 import DeleteTransactionService from '../services/DeleteTransactionService';
 import ImportTransactionsService from '../services/ImportTransactionsService';
+import UpdateTransactionService from '../services/UpdateTransactionService';
 
 const transactionsRouter = Router();
 
@@ -24,6 +25,20 @@ transactionsRouter.get('/', async (request, response) => {
   return response.json({ transactions, balance });
 });
 
+transactionsRouter.get('/:id', async (request, response) => {
+  const {id} = request.params;
+
+  const repository = getCustomRepository(TransactionsRepository);
+
+  const transaction = await repository.findOne({
+    where: {id},
+    relations: ['category'],
+    select: ['id', 'title', 'value', 'type', 'createdAt', 'updatedAt'],
+  });
+
+  return response.status(200).json(transaction);
+});
+
 transactionsRouter.post('/', async (request, response) => {
   const { title, value, type, category } = request.body;
 
@@ -37,6 +52,17 @@ transactionsRouter.post('/', async (request, response) => {
   });
 
   return response.json(transaction);
+});
+
+transactionsRouter.put('/:id', async (request, response ) => {
+  const {id} = request.params;
+  const {title, category} = request.body;
+
+  const service = new UpdateTransactionService();
+
+  const result = await service.execute({id, title, category});
+
+  return response.status(200).json(result);
 });
 
 transactionsRouter.delete('/:id', async (request, response) => {

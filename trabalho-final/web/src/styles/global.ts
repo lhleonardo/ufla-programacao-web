@@ -13,7 +13,7 @@ export default createGlobalStyle`
     -webkit-font-smoothing: antialiased
   }
 
-  body, input, button {
+  body, input, button, select {
     font: 16px "Poppins", sans-serif;
   }
 
