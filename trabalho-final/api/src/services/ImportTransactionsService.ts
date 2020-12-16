@@ -46,7 +46,7 @@ class ImportTransactionsService {
     });
 
     // espera pela finalização da leitura
-    await new Promise(resolve => csvReader.on('end', () => resolve()));
+    await new Promise(resolve => csvReader.on('end', () => resolve(null)));
 
     const categoryRepository = getRepository(Category);
     const transactionRepository = getCustomRepository(TransactionsRepository);

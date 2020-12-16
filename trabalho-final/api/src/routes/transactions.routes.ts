@@ -12,7 +12,6 @@ const transactionsRouter = Router();
 const upload = multer(uploadOptions);
 
 transactionsRouter.get('/', async (request, response) => {
-  // TODO
   const repository = getCustomRepository(TransactionsRepository);
 
   const transactions = await repository.find({
@@ -26,7 +25,6 @@ transactionsRouter.get('/', async (request, response) => {
 });
 
 transactionsRouter.post('/', async (request, response) => {
-  // TODO
   const { title, value, type, category } = request.body;
 
   const service = new CreateTransactionService();
@@ -42,7 +40,6 @@ transactionsRouter.post('/', async (request, response) => {
 });
 
 transactionsRouter.delete('/:id', async (request, response) => {
-  // TODO
   const { id } = request.params;
 
   const service = new DeleteTransactionService();
@@ -56,7 +53,6 @@ transactionsRouter.post(
   '/import',
   upload.single('file'),
   async (request, response) => {
-    // TODO
     const { path } = request.file;
 
     const service = new ImportTransactionsService();
