@@ -54,6 +54,14 @@ const Dashboard: React.FC = () => {
 
   const [orderBy, setOrderBy] = useState<OrderBy>({ value: 'id' });
 
+  const revalidateBalance = useCallback(async () => {
+    const response = await api.get<Pick<ApiResponse, 'balance'>>(
+      '/transactions',
+    );
+
+    return response.data.balance;
+  }, []);
+
   const handleDelete = useCallback((id, title) => {
     async function deleteTransaction() {
       const response = await Swal.fire({
@@ -70,8 +78,15 @@ const Dashboard: React.FC = () => {
       if (response.isConfirmed) {
         await api.delete(`/transactions/${id}`);
 
+        const newBalance = await revalidateBalance();
+
         setTransactions(currentState => {
           return currentState.filter(transaction => transaction.id !== id);
+        });
+        setBalance({
+          income: formatValue(newBalance.income),
+          outcome: formatValue(newBalance.outcome),
+          total: formatValue(newBalance.total),
         });
 
         await Swal.fire('Pronto!', 'A transação foi excluída!', 'success');
