@@ -66,6 +66,13 @@ export const TableContainer = styled.section`
       text-align: left;
       font-size: 16px;
       line-height: 24px;
+
+      button {
+        background: transparent;
+        border: none;
+
+        margin-left: 4px;
+      }
     }
 
     tbody {
@@ -103,6 +110,11 @@ export const TableContainer = styled.section`
         display: flex;
         flex-direction: row;
         align-items: center;
+
+        button {
+          background: transparent;
+          border: 0;
+        }
       }
 
       td:first-child {

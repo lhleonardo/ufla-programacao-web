@@ -1,26 +1,22 @@
-import React, { useState, useEffect } from 'react';
-
-import income from '../../assets/income.svg';
+import { compareAsc } from 'date-fns';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { FiChevronDown, FiChevronUp, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import dislike from '../../assets/dislike.svg';
+import income from '../../assets/income.svg';
 import outcome from '../../assets/outcome.svg';
 import total from '../../assets/total.svg';
-
-import api from '../../services/api';
-
 import Header from '../../components/Header';
-
+import api from '../../services/api';
 import formatValue from '../../utils/formatValue';
-
-import { FiEdit, FiTrash2 } from 'react-icons/fi';
-
 import {
-  Container,
-  CardContainer,
   Card,
-  TableContainer,
+  CardContainer,
+  Container,
   Empty,
+  TableContainer,
 } from './styles';
-import { Link } from 'react-router-dom';
 
 interface Transaction {
   id: string;
@@ -29,7 +25,7 @@ interface Transaction {
   formattedValue: string;
   formattedDate: string;
   type: 'income' | 'outcome';
-  category: { id?: string; title: string };
+  category: { id: string; title: string };
   createdAt: Date;
 }
 
@@ -48,9 +44,114 @@ interface ApiResponse {
   transactions: Omit<Transaction, 'formattedValue' | 'formattedDate'>[];
 }
 
+interface OrderBy {
+  value: 'id' | 'title' | 'category' | 'value' | 'createdAt';
+}
+
 const Dashboard: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [balance, setBalance] = useState<Balance>({} as Balance);
+
+  const [orderBy, setOrderBy] = useState<OrderBy>({ value: 'id' });
+
+  const handleDelete = useCallback((id, title) => {
+    async function deleteTransaction() {
+      const response = await Swal.fire({
+        title: 'Você tem certeza?',
+        text: `A transação "${title}" será apagada permanentemente.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sim, eu quero!',
+        cancelButtonText: 'Cancelar',
+      });
+
+      if (response.isConfirmed) {
+        await api.delete(`/transactions/${id}`);
+
+        setTransactions(currentState => {
+          return currentState.filter(transaction => transaction.id !== id);
+        });
+
+        await Swal.fire('Pronto!', 'A transação foi excluída!', 'success');
+      }
+    }
+
+    deleteTransaction();
+  }, []);
+
+  const handleSortChange = useCallback(
+    (option: OrderBy) => {
+      if (orderBy.value === option.value) {
+        setOrderBy({ value: 'id' });
+      } else {
+        setOrderBy(option);
+      }
+    },
+    [orderBy],
+  );
+
+  const transactionsSorted = useMemo(() => {
+    const data: Transaction[] = ([] as Transaction[]).concat(transactions);
+
+    switch (orderBy.value) {
+      case 'category':
+        data.sort((a, b) => {
+          if (
+            a.category.title.toLocaleLowerCase() <
+            b.category.title.toLocaleLowerCase()
+          ) {
+            return -1;
+          }
+          if (
+            a.category.title.toLocaleLowerCase() >
+            b.category.title.toLocaleLowerCase()
+          ) {
+            return 1;
+          }
+          return 0;
+        });
+
+        break;
+      case 'createdAt': {
+        data.sort((a, b) => {
+          return compareAsc(a.createdAt, b.createdAt);
+        });
+        break;
+      }
+      case 'title': {
+        data.sort((a, b) => {
+          if (a.title.toLocaleLowerCase() < b.title.toLocaleLowerCase()) {
+            return -1;
+          }
+          if (a.title.toLocaleLowerCase() > b.title.toLocaleLowerCase()) {
+            return 1;
+          }
+          return 0;
+        });
+        break;
+      }
+
+      case 'value': {
+        data.sort((a, b) => {
+          if (a.value < b.value) {
+            return -1;
+          }
+          if (a.value > b.value) {
+            return 1;
+          }
+          return 0;
+        });
+        break;
+      }
+
+      default:
+        break;
+    }
+
+    return data;
+  }, [transactions, orderBy]);
 
   useEffect(() => {
     async function loadTransactions(): Promise<void> {
@@ -113,27 +214,71 @@ const Dashboard: React.FC = () => {
         </CardContainer>
 
         <TableContainer>
-          {transactions.length === 0 && (
+          {transactionsSorted.length === 0 && (
             <Empty>
               <img src={dislike} alt="Dislike" />
               <span>Você ainda não registrou nenhuma transação</span>
             </Empty>
           )}
 
-          {transactions.length > 0 && (
+          {transactionsSorted.length > 0 && (
             <table>
               <thead>
                 <tr>
-                  <th>Título</th>
-                  <th>Preço</th>
-                  <th>Categoria</th>
-                  <th>Data</th>
+                  <th>
+                    Título
+                    <button
+                      onClick={() => handleSortChange({ value: 'title' })}
+                    >
+                      {orderBy.value === 'title' ? (
+                        <FiChevronUp color="#ff872c" />
+                      ) : (
+                        <FiChevronDown />
+                      )}
+                    </button>
+                  </th>
+                  <th>
+                    Preço
+                    <button
+                      onClick={() => handleSortChange({ value: 'value' })}
+                    >
+                      {orderBy.value === 'value' ? (
+                        <FiChevronUp color="#ff872c" />
+                      ) : (
+                        <FiChevronDown />
+                      )}
+                    </button>
+                  </th>
+                  <th>
+                    Categoria
+                    <button
+                      onClick={() => handleSortChange({ value: 'category' })}
+                    >
+                      {orderBy.value === 'category' ? (
+                        <FiChevronUp color="#ff872c" />
+                      ) : (
+                        <FiChevronDown />
+                      )}
+                    </button>
+                  </th>
+                  <th>
+                    Data
+                    <button
+                      onClick={() => handleSortChange({ value: 'createdAt' })}
+                    >
+                      {orderBy.value === 'createdAt' ? (
+                        <FiChevronUp color="#ff872c" />
+                      ) : (
+                        <FiChevronDown />
+                      )}
+                    </button>
+                  </th>
                   <th>Ações</th>
                 </tr>
               </thead>
 
               <tbody>
-                {transactions.map(transaction => (
+                {transactionsSorted.map(transaction => (
                   <tr key={transaction.id}>
                     <td className="title">{transaction.title}</td>
                     <td className={transaction.type}>
@@ -146,9 +291,13 @@ const Dashboard: React.FC = () => {
                       <Link to={`/edit/${transaction.id}`}>
                         <FiEdit size={20} color="#ffa45f" />
                       </Link>
-                      <Link to="/delete">
+                      <button
+                        onClick={() =>
+                          handleDelete(transaction.id, transaction.title)
+                        }
+                      >
                         <FiTrash2 color="#e83f5b" size={20} />
-                      </Link>
+                      </button>
                     </td>
                   </tr>
                 ))}
