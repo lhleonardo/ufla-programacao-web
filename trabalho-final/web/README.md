@@ -1,2 +1,2 @@
-# gostack-desafio-fundamentos-reactjs
-Repositório de implementação do sexto desafio presente no bootcamp GoStack da Rocketseat
+# Front-end
+Repositório de implementação do front-end do trabalho prático
