@@ -21,14 +21,13 @@ class UpdateTransactionService {
     title,
     category: categoryName,
   }: Request): Promise<Transaction> {
-
     const transactionRepository = getCustomRepository(TransactionsRepository);
     const categoryRepository = getRepository(Category);
 
     const transaction = await transactionRepository.findOne(id);
 
     if (!transaction) {
-      throw new AppError("Transação não existente");
+      throw new AppError('Transação não existente');
     }
 
     let category = await categoryRepository.findOne({
