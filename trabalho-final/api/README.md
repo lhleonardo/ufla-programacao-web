@@ -1,5 +1,3 @@
-# TypeORM, Database e Upload
+# Back-end
 
-## Persistência de dados do quinto desafio, com envio de CSV
-
-Repositório do quinto desafio do bootcamp GoStack, utilizando TypeORM e Multer
+Repositório responsável por manter o back-end da aplicação
